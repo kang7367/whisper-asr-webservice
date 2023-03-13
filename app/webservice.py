@@ -60,6 +60,7 @@ async def index():
     return "/docs"
 
 @app.post("/asr", tags=["Endpoints"])
+
 def transcribe(
                 audio_file: UploadFile = File(...),
                 task : Union[str, None] = Query(default="transcribe", enum=["transcribe", "translate"]),
@@ -69,23 +70,24 @@ def transcribe(
                 ):
 
     result = run_asr(audio_file.file, task, language, initial_prompt)
-    filename = audio_file.filename.split('.')[0]
-    myFile = StringIO()
-    if(output == "srt"):
-        WriteSRT(ResultWriter).write_result(result, file = myFile)
-    elif(output == "vtt"):
-        WriteVTT(ResultWriter).write_result(result, file = myFile)
-    elif(output == "tsv"):
-        WriteTSV(ResultWriter).write_result(result, file = myFile)
-    elif(output == "json"):
-        WriteJSON(ResultWriter).write_result(result, file = myFile)
-    elif(output == "txt"):
-        WriteTXT(ResultWriter).write_result(result, file = myFile)
-    else:
-        return 'Please select an output method!'
-    myFile.seek(0)
-    return StreamingResponse(myFile, media_type="text/plain", 
-                            headers={'Content-Disposition': f'attachment; filename="{filename}.{output}"'})
+#     filename = audio_file.filename.split('.')[0]
+#     myFile = StringIO()
+#     if(output == "srt"):
+#         WriteSRT(ResultWriter).write_result(result, file = myFile)
+#     elif(output == "vtt"):
+#         WriteVTT(ResultWriter).write_result(result, file = myFile)
+#     elif(output == "tsv"):
+#         WriteTSV(ResultWriter).write_result(result, file = myFile)
+#     elif(output == "json"):
+#         WriteJSON(ResultWriter).write_result(result, file = myFile)
+#     elif(output == "txt"):
+#         WriteTXT(ResultWriter).write_result(result, file = myFile)
+#     else:
+#         return 'Please select an output method!'
+#     myFile.seek(0)
+#     return StreamingResponse(result, media_type="text/plain", 
+#                             headers={'Content-Disposition': f'attachment; filename="{filename}.{output}"'})
+    return result
 
 
 @app.post("/detect-language", tags=["Endpoints"])
